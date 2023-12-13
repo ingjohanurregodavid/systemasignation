@@ -51,12 +51,25 @@ class AsignationSubjectsController extends Controller
             'idStudent' => 'required',
             'idSubject' => 'required',
             'idProfessor' => 'required',
+            // Regla de validación personalizada para asegurar que un estudiante no tenga la misma asignatura con varios profesores
+            'idStudent' => [
+                'required',
+                function ($attribute, $value, $fail) use ($request) {
+                    $existingAssignment = AsignationSubjects::where('idStudent', $request->idStudent)
+                        ->where('idSubject', $request->idSubject)
+                        ->exists();
+
+                    if ($existingAssignment) {
+                    $fail('El estudiante ya está asignado a esta materia con otro profesor.');
+                }
+            },
+        ],
         ]);
 
         // Simulación de la creación de una asignatura
         AsignationSubjects::create($request->all());
 
-        return redirect()->route('asignationSubjects.index');
+        return redirect()->route('Asignation.index');
     }
 
     public function show($id)
@@ -77,13 +90,26 @@ class AsignationSubjectsController extends Controller
             'idStudent' => 'required',
             'idSubject' => 'required',
             'idProfessor' => 'required',
+            // Regla de validación personalizada para asegurar que un estudiante no tenga la misma asignatura con varios profesores
+            'idStudent' => [
+                'required',
+                function ($attribute, $value, $fail) use ($request) {
+                    $existingAssignment = AsignationSubjects::where('idStudent', $request->idStudent)
+                        ->where('idSubject', $request->idSubject)
+                        ->exists();
+
+                    if ($existingAssignment) {
+                    $fail('El estudiante ya está asignado a esta materia con otro profesor.');
+                }
+            },
+        ],
         ]);
 
         // Simulación de la actualización de una asignatura
         $asignationaubjects = AsignationSubjects::findOrFail($id);
         $asignationaubjects->update($request->all());
 
-        return redirect()->route('asignationSubjects.index');
+        return redirect()->route('Asignation.index',[]);
     }
 
     public function destroy($id)
@@ -92,14 +118,31 @@ class AsignationSubjectsController extends Controller
         $asignationaubjects = AsignationSubjects::findOrFail($id);
         $asignationaubjects->delete();
 
-        return redirect()->route('asignationSubjects.index');
+        return redirect()->route('Asignation.index');
     }
-    public function assignmentsByStudent()
+    public function StudentByAsignatura()
     {
-        $data = Student::with('asignationSubjects.subject', 'asignationSubjects.professor')->get();
+        $data = AsignationSubjects::select(DB::raw('count(asignation_subjects.id) as count,
+        students.names AS student_names,professors.names AS professor_names,subjects.names AS subject_names'))
+        ->join('professors', 'professors.id', '=', 'asignation_subjects.idprofessor')
+        ->join('students', 'students.id', '=', 'asignation_subjects.idstudent')
+        ->join('subjects', 'subjects.id', '=', 'asignation_subjects.idsubject')
+        ->groupBy('students.names','professors.names','subjects.names')->get();
     
         // Renderizar una vista con la información de los estudiantes y sus asignaturas/profesores
-        return Inertia::render('AsignationSubjects/ByStudent', ['students' => $data]);
+        return Inertia::render('AsignationSubjects/Graphic', ['data' => $data]);
+    }
+    public function reports()
+    {
+        $asignation_subjects = AsignationSubjects::select(DB::raw('count(asignation_subjects.id) as count,
+        students.names AS student_names,professors.names AS professor_names,subjects.names AS subject_names'))
+        ->join('professors', 'professors.id', '=', 'asignation_subjects.idprofessor')
+        ->join('students', 'students.id', '=', 'asignation_subjects.idstudent')
+        ->join('subjects', 'subjects.id', '=', 'asignation_subjects.idsubject')
+        ->groupBy('students.names','professors.names','subjects.names')->get();
+    
+        // Renderizar una vista con la información de los estudiantes y sus asignaturas/profesores
+        return Inertia::render('AsignationSubjects/Reports', ['asignation_subjects' => $asignation_subjects]);
     }
 
 }

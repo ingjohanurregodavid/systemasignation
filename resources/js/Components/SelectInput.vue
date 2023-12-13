@@ -24,7 +24,7 @@ defineExpose({ focus: () => input.value.focus() });
         ref="input"
     >
     <option v-for="op in options" :key="op.id" :value="op.id">
-        {{ op.name }}
+        {{ op.Names }}
     </option>
     </select>
 </template>

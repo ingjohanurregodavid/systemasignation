@@ -35,19 +35,19 @@ const formPage=useForm({});
 const onPageClick=(event)=>{
     formPage.get(route('Asignation.index',{page:event}))
 }
-const openModal=(op,idStudent,idSubject,idProfessor,students,subjects,professors)=>{
+const openModal=(op,idStudent,idSubject,idprofessors,asignation_subjects)=>{
     modal.value=true;
-    nextTick(()=>nameImput.val.focus());
+    nextTick(()=>nameImput.value.focus());
     operation.value=op;
     id.value=asignation_subjects;
     if(op==1){
-        title.Value='Create Asignation'
+        title.value='Create Asignation'
     }
     else{
         title.value='Edit Asignation';
-        form.idStudent=students;
-        form.idSubject=subjects;
-        form.idProfessor=professors;
+        form.idStudent=idStudent;
+        form.idSubject=idSubject;
+        form.idProfessor=idprofessors;
 
     }
 };
@@ -60,11 +60,12 @@ const  closeModal=()=>{
 const save=()=>{
     if(operation.value==1){
         form.post(route('Asignation.store'),{
-            onSuccess:()=>{ok('Asignation.create')}
+            onSuccess:()=>{ok('Asignation create')}
         });
     }else{
-        form.post(route('Asignation.update',id.value),{
-            onSuccess:()=>{ok('Asignation.update')}
+        form.patch(route('Asignation.update',id.value),{
+            onSuccess:()=>{ok('Asignation update')}
+            
         });
     }
 }
@@ -75,12 +76,12 @@ const ok=(msj)=>{
     Swal.fire({title:msj,icon:'success'});
 }
 
-const deleteAsignation=(id,name)=>{
+const deleteAsignation=(id,names)=>{
     const alert=Swal.mixin({
         buttonsStyling:true
     });
     alert.fire({
-        title:'Are you sure delete   '+name+' ?',
+        title:'Are you sure delete   '+names+' ?',
         icon:'question',showCancelButton:true,
         confirmButtonText:'<i class="fa-solid fa-check"></i>yes,delete',
         cancelButtonText:'<i class="fa-solid fa-ban"></i>Cancel'
@@ -126,16 +127,16 @@ const deleteAsignation=(id,name)=>{
                     <tbody>
                         <tr v-for="asje, i in asignation_subjects.data" :key="asje.id">    
                             <td class="border border-gray-400 px-4 py-4">{{ i+1 }}</td>
-                            <td class="border border-gray-400 px-4 py-4">{{ asje.idStudent }}</td>
-                            <td class="border border-gray-400 px-4 py-4">{{ asje.idSubject }}</td>
-                            <td class="border border-gray-400 px-4 py-4">{{ asje.idProfessor }}</td>
+                            <td class="border border-gray-400 px-4 py-4">{{ asje.student_names }}</td>
+                            <td class="border border-gray-400 px-4 py-4">{{ asje.subject_names }}</td>
+                            <td class="border border-gray-400 px-4 py-4">{{ asje.professor_names }}</td>
                             <td class="border border-gray-400 px-4 py-4"> 
-                                <WarningButton @click="$event=>openModal(2,asje.idStudent,asje.idSubject,asje.idProfessor,asje.id)">
+                                <WarningButton @click="$event=>openModal(2,asje.student_id,asje.subject_id,asje.professor_id,asje.id)">
                                     <i class="fa-solid fa-edit"></i>
                                 </WarningButton>
                             </td>
                             <td class="border border-gray-400 px-4 py-4"> 
-                                <DangerButton @click="deleteAsignation(sjt.id,sjt.Names)">
+                                <DangerButton @click="deleteAsignation(asje.id,asje.student_names)">
                                     <i class="fa-solid fa-trash"></i>
                                 </DangerButton>
                             </td>
@@ -177,7 +178,14 @@ const deleteAsignation=(id,name)=>{
                 </SelectInput>
                 <InputError :message="form.errors.idProfessor" class="mt-2"></InputError>
             </div>
+            <div class="p-3 mt-6">
+                <PrimaryButton :disabled="form.processing" @click="save">
+                    <i class="fa-solid fa-end">Save</i>
+                </PrimaryButton>
+            </div>
+            <div class="p-3 mt-6" flex-just>
 
+            </div>
         </Modal>
     </AuthenticatedLayout>
 </template>

@@ -40,8 +40,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('Students',StudentsController::class);
     Route::resource('Subjects',SubjectsController::class);
     Route::resource('Asignation',AsignationSubjectsController::class);
-    Route::get('graphic',[ProfileController::class,'StudentByAsignatura'])->name('graphic');
-    Route::get('reports',[ProfileController::class,'reports'])->name('reports');
+    Route::get('graphic',[AsignationSubjectsController::class,'StudentByAsignatura'])->name('graphic');
+    Route::get('reports',[AsignationSubjectsController::class,'reports'])->name('reports');
 });
 
 require __DIR__.'/auth.php';

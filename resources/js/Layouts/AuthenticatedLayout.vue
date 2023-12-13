@@ -27,12 +27,7 @@ const showingNavigationDropdown = ref(false);
                                 </Link>
                             </div>
 
-                            <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
-                                </NavLink>
-                            </div>
+                           
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('Students.index')" :active="route().current('students.index')">
                                     Students
@@ -52,7 +47,17 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('Asignation.index')" :active="route().current('Asignation.index')">
                                     Asignation Subjects
                                 </NavLink>
-                            </div>                        
+                            </div>     
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('graphic')" :active="route().current('graphic')">
+                                    Graphic
+                                </NavLink>
+                            </div>       
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('reports')" :active="route().current('reports')">
+                                    Reports
+                                </NavLink>
+                            </div>               
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -132,9 +137,7 @@ const showingNavigationDropdown = ref(false);
                     class="sm:hidden"
                 >
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
-                        </ResponsiveNavLink>
+                        
 
                         <ResponsiveNavLink :href="route('Students.index')" :active="route().current('Students.index')">
                             Students
@@ -148,7 +151,13 @@ const showingNavigationDropdown = ref(false);
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('Asignation.index')" :active="route().current('Asignation.index')">
                             Asignation Subjects
-                        </ResponsiveNavLink>           
+                        </ResponsiveNavLink>    
+                        <ResponsiveNavLink :href="route('graphic')" :active="route().current('graphic')">
+                            Graphic
+                        </ResponsiveNavLink>   
+                        <ResponsiveNavLink :href="route('reports')" :active="route().current('reports')">
+                            Reports
+                        </ResponsiveNavLink>     
                     </div>
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200">
